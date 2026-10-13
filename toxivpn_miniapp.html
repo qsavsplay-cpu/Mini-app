@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1512">
+<title>ToxiVPN</title>
+<script src="https://telegram.org/js/telegram-web-app.js">
+
+
+// Menu actions are sent to the Telegram bot through WebApp data.
+document.querySelectorAll('[data-action]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const action = button.dataset.action;
+    if (!window.Telegram?.WebApp) {
+      document.getElementById('menuNote').textContent = 'Открой Mini App через Telegram, чтобы пользоваться меню.';
+      return;
+    }
+    window.Telegram.WebApp.sendData(JSON.stringify({ action }));
+  });
+});
+
+</script>
+<style>
+:root {
+  color-scheme:dark;
+  --bg:#07110e;
+  --panel:#101e19;
+  --panel2:#142820;
+  --line:#244337;
+  --green:#38e08b;
+  --muted:#9ab3a7;
+  --text:#f0fff7;
+  --red:#ff7272
+}
+
+* {
+  box-sizing:border-box
+}
+
+body {
+  margin:0;
+  background:radial-gradient(900px 400px at 10% -10%,#174b34 0%,transparent 60%),var(--bg);
+  color:var(--text);
+  font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  min-height:100vh
+}
+
+.wrap {
+  max-width:980px;
+  margin:auto;
+  padding:22px 16px 40px
+}
+
+.top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:22px
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:800;
+  font-size:20px
+}
+
+.logo {
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#43efa0,#138653);
+  color:#04150d;
+  font-weight:900;
+  font-size:21px;
+  box-shadow:0 8px 28px #21d97b22
+}
+
+.pill {
+  border:1px solid var(--line);
+  background:#10231b;
+  padding:7px 11px;
+  border-radius:999px;
+  color:var(--green);
+  font-size:12px
+}
+
+.hero {
+  border:1px solid #24523d;
+  background:linear-gradient(135deg,#143c2b,#0d1d16 75%);
+  border-radius:26px;
+  padding:24px;
+  position:relative;
+  overflow:hidden
+}
+
+.hero:after {
+  content:' ';
+  position:absolute;
+  width:210px;
+  height:210px;
+  border-radius:50%;
+  right:-65px;
+  top:-95px;
+  background:#43efa012;
+  border:1px solid #43efa022
+}
+
+.eyebrow {
+  color:var(--green);
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+.hero h1 {
+  font-size:clamp(26px,5vw,40px);
+  line-height:1.1;
+  margin:10px 0
+}
+
+.hero p {
+  color:#b4d0c1;
+  margin:0;
+  max-width:540px
+}
+
+.actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px
+}
+
+.btn {
+  border:0;
+  border-radius:13px;
+  padding:12px 16px;
+  background:var(--green);
+  color:#042013;
+  font-weight:800;
+  cursor:pointer
+}
+
+.btn.secondary {
+  background:#1a3227;
+  color:var(--text);
+  border:1px solid var(--line)
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px
+}
+
+.card {
+  grid-column:span 4;
+  background:linear-gradient(180deg,#12231c,#0d1914);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  min-width:0
+}
+
+.card.wide {
+  grid-column:span 8
+}
+
+.card.full {
+  grid-column:1/-1
+}
+
+.label {
+  color:var(--muted);
+  font-size:13px
+}
+
+.value {
+  font-size:26px;
+  font-weight:800;
+  margin:7px 0 4px;
+  overflow-wrap:anywhere
+}
+
+.subtle {
+  color:var(--muted);
+  font-size:12px
+}
+
+.bar {
+  height:8px;
+  background:#20372c;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:14px
+}
+
+.bar span {
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#22bb70,#69f3ad);
+  border-radius:99px;
+  transition:width .3s
+}
+
+.row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px
+}
+
+.server {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 0;
+  border-bottom:1px solid #1b3328
+}
+
+.server:last-child {
+  border:0
+}
+
+.status {
+  font-size:12px;
+  color:var(--green);
+  background:#163b29;
+  padding:5px 9px;
+  border-radius:99px
+}
+
+.status.off {
+  color:#ffc27a;
+  background:#3b2b18
+}
+
+.error {
+  color:#ffb0b0
+}
+
+.muted {
+  color:var(--muted)
+}
+
+.footer {
+  text-align:center;
+  color:#658477;
+  font-size:12px;
+  padding-top:20px
+}
+
+input {
+  width:100%;
+  background:#08140f;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  color:var(--text);
+  margin:8px 0
+}
+ @media(max-width:700px) {
+  .card,.card.wide {
+  grid-column:1/-1
+}
+
+.hero {
+  padding:20px
+}
+
+.wrap {
+  padding:16px 12px 30px
+}
+
+.value {
+  font-size:24px
+}
+
+}
+
+.logo { overflow:hidden; padding:0 !important; }
+.logo img { width:100%; height:100%; object-fit:cover; display:block; }
+.menu-section { margin:20px 0 6px; }
+.menu-section h2 { font-size:19px; margin:0 0 11px; }
+.menu-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.menu-button { display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-width:0; padding:14px; color:var(--text); text-decoration:none; text-align:left; border:1px solid var(--line); border-radius:17px; background:linear-gradient(145deg,#10261b,#0a1711); }
+.menu-button span { display:grid; place-items:center; width:35px; height:35px; margin-bottom:4px; border-radius:11px; background:#153b27; font-size:18px; }
+.menu-button b { font-size:13px; }
+.menu-button small,.menu-note { color:var(--muted); font-size:11px; }
+.menu-note { margin:11px 2px 0; }
+@media(min-width:650px){.menu-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<div class="brand">
+<div class="logo"><img src="/app-logo" alt="ToxiVPN" onload="this.style.display='block';this.parentElement.style.padding='0'" onerror="this.remove();this.parentElement.textContent='T'"></div>
+<div>ToxiVPN<div class="subtle" style="font-weight:500">Личный кабинет</div>
+</div>
+</div>
+<div class="pill" id="connection">Подключение…</div>
+</header>
+<section class="hero">
+<div class="eyebrow">Ваш VPN · личный кабинет</div>
+<h1 id="greeting">Всё под контролем.</h1>
+<p>Состояние подписки, остаток трафика и серверы — в одном месте.</p>
+<div class="actions">
+<button class="btn" id="refresh">Обновить данные</button>
+<button class="btn secondary" id="copyLink">Копировать ссылку</button>
+</div>
+</section>
+<section class="menu-section">
+<h2>Меню ToxiVPN</h2>
+<div class="menu-grid">
+<button class="menu-button" data-action="buy"><span>💳</span><b>Купить подписку</b><small>Тарифы и оплата</small></button>
+<button class="menu-button" data-action="trial"><span>🎟</span><b>Пробник</b><small>Бесплатный доступ</small></button>
+<button class="menu-button" data-action="profile"><span>👤</span><b>Моя подписка</b><small>Статус и срок</small></button>
+<button class="menu-button" data-action="connect"><span>🔗</span><b>Ссылка подписки</b><small>Получить ссылку</small></button>
+<button class="menu-button" data-action="balance"><span>💎</span><b>Баланс</b><small>Баланс и пополнение</small></button>
+<button class="menu-button" data-action="promo"><span>🎁</span><b>Промокод</b><small>Активировать код</small></button>
+<button class="menu-button" data-action="referrals"><span>👥</span><b>Рефералы</b><small>Приглашения и бонусы</small></button>
+<button class="menu-button" data-action="tickets"><span>🎫</span><b>Тикеты</b><small>Поддержка</small></button>
+<button class="menu-button" data-action="faq"><span>📚</span><b>FAQ</b><small>Частые вопросы</small></button>
+<button class="menu-button" data-action="documents"><span>📜</span><b>Документы</b><small>Правила и условия</small></button>
+<a class="menu-button" href="https://t.me/ToxiSupport"><span>🆘</span><b>Поддержка</b><small>@ToxiSupport</small></a>
+<a class="menu-button" href="https://t.me/ToxiVPN"><span>📢</span><b>Канал</b><small>Новости ToxiVPN</small></a>
+</div>
+<p class="menu-note" id="menuNote">Для действий, связанных с оплатой и аккаунтом, используется защищённый обработчик бота.</p>
+</section>
+<section class="grid">
+<div class="card">
+<div class="label">Статус подписки</div>
+<div class="value" id="subStatus">Загрузка…</div>
+<div class="subtle" id="expire">Проверяем срок действия</div>
+</div>
+<div class="card">
+<div class="label">Остаток трафика</div>
+<div class="value" id="traffic">—</div>
+<div class="subtle" id="trafficCaption">Лимит 50 GB</div>
+<div class="bar">
+<span id="trafficBar">
+</span>
+</div>
+</div>
+<div class="card">
+<div class="label">Устройства</div>
+<div class="value" id="devices">—</div>
+<div class="subtle">Лимит по вашей подписке</div>
+</div>
+<div class="card wide">
+<div class="row">
+<div>
+<div class="label">Подписка</div>
+<div class="value" id="plan">ToxiVPN</div>
+</div>
+<div class="pill" id="subKeyLabel">Защищено</div>
+</div>
+<div class="subtle" id="subHint">Данные загружаются из API</div>
+</div>
+<div class="card">
+<div class="label">Пользователь</div>
+<div class="value" id="userName">Telegram</div>
+<div class="subtle" id="userId">Ожидаем Telegram WebApp</div>
+</div>
+<div class="card full">
+<div class="row">
+<div>
+<div class="value" style="font-size:20px">Серверы</div>
+<div class="subtle">Доступные точки подключения</div>
+</div>
+<div class="pill" id="serverCount">0 серверов</div>
+</div>
+<div id="servers">
+<div class="server">
+<span class="muted">Подключаемся к API…</span>
+</div>
+</div>
+</div>
+<div class="card full">
+<div class="row">
+<div>
+<div class="value" style="font-size:19px">Синхронизация</div>
+<div class="subtle" id="apiMessage">Подключаемся к ToxiVPN автоматически.</div>
+</div>
+<div class="pill" id="apiHost">API</div>
+</div>
+</div>
+</section>
+<div class="footer">ToxiVPN · Защищённая панель управления</div>
+</main>
+<script>
+
+</script>
+<style>
+:root {
+  color-scheme:dark;
+  --bg:#07110e;
+  --panel:#101e19;
+  --panel2:#142820;
+  --line:#244337;
+  --green:#38e08b;
+  --muted:#9ab3a7;
+  --text:#f0fff7;
+  --red:#ff7272
+}
+
+* {
+  box-sizing:border-box
+}
+
+body {
+  margin:0;
+  background:radial-gradient(900px 400px at 10% -10%,#174b34 0%,transparent 60%),var(--bg);
+  color:var(--text);
+  font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  min-height:100vh
+}
+
+.wrap {
+  max-width:980px;
+  margin:auto;
+  padding:22px 16px 40px
+}
+
+.top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:22px
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:800;
+  font-size:20px
+}
+
+.logo {
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#43efa0,#138653);
+  color:#04150d;
+  font-weight:900;
+  font-size:21px;
+  box-shadow:0 8px 28px #21d97b22
+}
+
+.pill {
+  border:1px solid var(--line);
+  background:#10231b;
+  padding:7px 11px;
+  border-radius:999px;
+  color:var(--green);
+  font-size:12px
+}
+
+.hero {
+  border:1px solid #24523d;
+  background:linear-gradient(135deg,#143c2b,#0d1d16 75%);
+  border-radius:26px;
+  padding:24px;
+  position:relative;
+  overflow:hidden
+}
+
+.hero:after {
+  content:' ';
+  position:absolute;
+  width:210px;
+  height:210px;
+  border-radius:50%;
+  right:-65px;
+  top:-95px;
+  background:#43efa012;
+  border:1px solid #43efa022
+}
+
+.eyebrow {
+  color:var(--green);
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+.hero h1 {
+  font-size:clamp(26px,5vw,40px);
+  line-height:1.1;
+  margin:10px 0
+}
+
+.hero p {
+  color:#b4d0c1;
+  margin:0;
+  max-width:540px
+}
+
+.actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px
+}
+
+.btn {
+  border:0;
+  border-radius:13px;
+  padding:12px 16px;
+  background:var(--green);
+  color:#042013;
+  font-weight:800;
+  cursor:pointer
+}
+
+.btn.secondary {
+  background:#1a3227;
+  color:var(--text);
+  border:1px solid var(--line)
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px
+}
+
+.card {
+  grid-column:span 4;
+  background:linear-gradient(180deg,#12231c,#0d1914);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  min-width:0
+}
+
+.card.wide {
+  grid-column:span 8
+}
+
+.card.full {
+  grid-column:1/-1
+}
+
+.label {
+  color:var(--muted);
+  font-size:13px
+}
+
+.value {
+  font-size:26px;
+  font-weight:800;
+  margin:7px 0 4px;
+  overflow-wrap:anywhere
+}
+
+.subtle {
+  color:var(--muted);
+  font-size:12px
+}
+
+.bar {
+  height:8px;
+  background:#20372c;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:14px
+}
+
+.bar span {
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#22bb70,#69f3ad);
+  border-radius:99px;
+  transition:width .3s
+}
+
+.row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px
+}
+
+.server {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 0;
+  border-bottom:1px solid #1b3328
+}
+
+.server:last-child {
+  border:0
+}
+
+.status {
+  font-size:12px;
+  color:var(--green);
+  background:#163b29;
+  padding:5px 9px;
+  border-radius:99px
+}
+
+.status.off {
+  color:#ffc27a;
+  background:#3b2b18
+}
+
+.error {
+  color:#ffb0b0
+}
+
+.muted {
+  color:var(--muted)
+}
+
+.footer {
+  text-align:center;
+  color:#658477;
+  font-size:12px;
+  padding-top:20px
+}
+
+input {
+  width:100%;
+  background:#08140f;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  color:var(--text);
+  margin:8px 0
+}
+ @media(max-width:700px) {
+  .card,.card.wide {
+  grid-column:1/-1
+}
+
+.hero {
+  padding:20px
+}
+
+.wrap {
+  padding:16px 12px 30px
+}
+
+.value {
+  font-size:24px
+}
+
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<div class="brand">
+<div class="logo"><img src="/app-logo" alt="ToxiVPN" onload="this.style.display='block';this.parentElement.style.padding='0'" onerror="this.remove();this.parentElement.textContent='T'"></div>
+<div>ToxiVPN<div class="subtle" style="font-weight:500">Личный кабинет</div>
+</div>
+</div>
+<div class="pill" id="connection">Подключение…</div>
+</header>
+<section class="hero">
+<div class="eyebrow">Ваш VPN · личный кабинет</div>
+<h1 id="greeting">Всё под контролем.</h1>
+<p>Состояние подписки, остаток трафика и серверы — в одном месте.</p>
+<div class="actions">
+<button class="btn" id="refresh">Обновить данные</button>
+<button class="btn secondary" id="copyLink">Копировать ссылку</button>
+</div>
+</section>
+<section class="grid">
+<div class="card">
+<div class="label">Статус подписки</div>
+<div class="value" id="subStatus">Загрузка…</div>
+<div class="subtle" id="expire">Проверяем срок действия</div>
+</div>
+<div class="card">
+<div class="label">Остаток трафика</div>
+<div class="value" id="traffic">—</div>
+<div class="subtle" id="trafficCaption">Лимит 50 GB</div>
+<div class="bar">
+<span id="trafficBar">
+</span>
+</div>
+</div>
+<div class="card">
+<div class="label">Устройства</div>
+<div class="value" id="devices">—</div>
+<div class="subtle">Лимит по вашей подписке</div>
+</div>
+<div class="card wide">
+<div class="row">
+<div>
+<div class="label">Подписка</div>
+<div class="value" id="plan">ToxiVPN</div>
+</div>
+<div class="pill" id="subKeyLabel">Защищено</div>
+</div>
+<div class="subtle" id="subHint">Данные загружаются из API</div>
+</div>
+<div class="card">
+<div class="label">Пользователь</div>
+<div class="value" id="userName">Telegram</div>
+<div class="subtle" id="userId">Ожидаем Telegram WebApp</div>
+</div>
+<div class="card full">
+<div class="row">
+<div>
+<div class="value" style="font-size:20px">Серверы</div>
+<div class="subtle">Доступные точки подключения</div>
+</div>
+<div class="pill" id="serverCount">0 серверов</div>
+</div>
+<div id="servers">
+<div class="server">
+<span class="muted">Подключаемся к API…</span>
+</div>
+</div>
+</div>
+<div class="card full">
+<div class="row">
+<div>
+<div class="value" style="font-size:19px">Синхронизация</div>
+<div class="subtle" id="apiMessage">Подключаемся к ToxiVPN автоматически.</div>
+</div>
+<div class="pill" id="apiHost">API</div>
+</div>
+</div>
+</section>
+<div class="footer">ToxiVPN · Защищённая панель управления</div>
+</main>
+<script>
+(()=>{const tg=window.Telegram?.WebApp;try{tg?.ready();tg?.expand();}catch(e){}const $=id=>document.getElementById(id);let subscriptionUrl='';const apiBase=window.location.origin;let telegramId=tg?.initDataUnsafe?.user?.id||null;const user=tg?.initDataUnsafe?.user; if(user){$('greeting').textContent=`Привет, ${user.first_name||'пользователь'}.`;$('userName').textContent=[user.first_name,user.last_name].filter(Boolean).join(' ')||'Telegram';$('userId').textContent='ID скрыт для безопасности';}function setStatus(t,ok=false){$('connection').textContent=t;$('connection').style.color=ok?'var(--green)':'#ffc27a'}function fmtDate(v){if(!v)return'Не указана';const d=new Date(v);return isNaN(d)?String(v):d.toLocaleString('ru-RU',{dateStyle:'medium',timeStyle:'short'})}function renderServers(list){$('servers').innerHTML='';if(!Array.isArray(list)||!list.length){$('servers').innerHTML='<div class="server"><span class="muted">API не вернул список серверов</span></div>';$('serverCount').textContent='0 серверов';return}$('serverCount').textContent=`${list.length} серверов`;list.forEach(s=>{const el=document.createElement('div');el.className='server';const name=document.createElement('b');name.textContent=s.name||s.country||s.server_key||'VPN сервер';const state=document.createElement('span');state.className='status'+(s.is_active===false?' off':'');state.textContent=s.is_active===false?'Недоступен':'Доступен';el.append(name,state);$('servers').append(el)})}function render(d){const sub=d.subscription||d.data?.subscription||d.data||d;const active=sub.is_active!==false&&sub.status!=='expired'&&!sub.is_blocked;$('subStatus').textContent=active?'Активна':'Неактивна';$('subStatus').style.color=active?'var(--green)':'var(--red)';$('expire').textContent='До: '+fmtDate(sub.expire||sub.expires_at);const used=Number(sub.traffic_used_gb??sub.used_gb??0),limit=Number(sub.traffic_limit_gb??sub.total_gb??50);const left=Math.max(0,limit-used);$('traffic').textContent=`${left.toFixed(1)} GB`;$('trafficCaption').textContent=`Использовано ${used.toFixed(1)} из ${limit.toFixed(1)} GB`;$('trafficBar').style.width=`${limit>0?Math.min(100,used/limit*100):0}%`;$('devices').textContent=`${sub.devices_used??'—'} / ${sub.max_devices??2}`;$('plan').textContent=sub.plan_name||'ToxiVPN';$('subHint').textContent=sub.sub_key?'Ключ подписки активен':'Состояние получено из API';subscriptionUrl=sub.subscription_url||sub.url||'';if(sub.servers)renderServers(sub.servers);else if(d.servers)renderServers(d.servers);setStatus('Синхронизировано',true)}async function load(){if(!telegramId){setStatus('Открой через Telegram');$('apiMessage').textContent='Запусти Mini App из Telegram, чтобы определить пользователя.';return}setStatus('Загрузка…');try{const headers={'Accept':'application/json'};if(tg?.initData)headers['X-Telegram-Init-Data']=tg.initData;const r=await fetch(`${apiBase.replace(/\/$/,'')}/api/v1/subscription/${telegramId}`,{headers,cache:'no-store'});if(!r.ok)throw new Error(`API ответил ${r.status}`);const data=await r.json();render(data);if(!data.servers){try{const sr=await fetch(`${apiBase.replace(/\/$/,'')}/api/v1/servers`,{headers,cache:'no-store'});if(sr.ok){const sd=await sr.json();renderServers(sd.servers||sd.data||sd)}}catch(e){}}$('apiMessage').textContent='API подключён.'}catch(e){setStatus('Ошибка API');$('apiMessage').textContent=e.message+' — проверь URL, CORS и доступность API.'}}$('refresh').onclick=load;$('apiHost').textContent=location.host;$('copyLink').onclick=async()=>{if(!subscriptionUrl){$('apiMessage').textContent='Ссылка подписки пока не получена из API.';return}try{await navigator.clipboard.writeText(subscriptionUrl);$('apiMessage').textContent='Ссылка скопирована.'}catch(e){$('apiMessage').textContent=subscriptionUrl}};if(tg?.colorScheme==='light'){document.documentElement.style.colorScheme='dark'}setStatus('Подключение…');load();})();
+</script>
+</body>
+</html>
